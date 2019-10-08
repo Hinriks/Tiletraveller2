@@ -40,42 +40,47 @@ def print_directions(directions_str):
         first = False
     print(".")
 
-def pull_liver(coin):
-    inputed = input("Pull a lever (y/n):")
+def lever_rooms(col, row, coin):
+    add_coin = 0
+    if col == 1 and row == 2:  # (1,2)
+        inputed = input("Pull a lever (y/n): ")
+        if inputed.lower() == "y":
+            add_coin = 1
+            print("You received 1 coin, your total is now {}.".format(coin+add_coin))
+    elif col == 2 and row == 2:  # (2,2)
+        inputed = input("Pull a lever (y/n): ")
+        if inputed.lower() == "y":
+            add_coin = 1
+            print("You received 1 coin, your total is now {}.".format(coin+add_coin))
+    elif col == 2 and row == 3:  # (2,3)
+        inputed = input("Pull a lever (y/n): ")
+        if inputed.lower() == "y":
+            add_coin = 1
+            print("You received 1 coin, your total is now {}.".format(coin+add_coin))
+    elif col == 3 and row == 2:  # (3,2)
+        inputed = input("Pull a lever (y/n): ")
+        if inputed.lower() == "y":
+            add_coin = 1
+            print("You received 1 coin, your total is now {}.".format(coin+add_coin))
+    return add_coin
 
-    if inputed.lower() == "y":
-        coin +=1
-        print("You received 1 coin, your total is now {}".format(coin))
-        return coin
-
-    return
-
-def find_directions(col, row,coin):
+def find_directions(col, row):
     ''' Returns valid directions as a string given the supplied location '''
 
     if col == 1 and row == 1:  # (1,1)
         valid_directions = NORTH
-
     elif col == 1 and row == 2:  # (1,2)
         valid_directions = NORTH + EAST + SOUTH
-        pull_liver(coin)
-
-
     elif col == 1 and row == 3:  # (1,3)
         valid_directions = EAST + SOUTH
     elif col == 2 and row == 1:  # (2,1)
         valid_directions = NORTH
     elif col == 2 and row == 2:  # (2,2)
         valid_directions = SOUTH + WEST
-        pull_liver(coin)
-
-
     elif col == 2 and row == 3:  # (2,3)
         valid_directions = EAST + WEST
-        pull_liver(coin)
     elif col == 3 and row == 2:  # (3,2)
         valid_directions = NORTH + SOUTH
-        pull_liver(coin)
 
     elif col == 3 and row == 3:  # (3,3)
         valid_directions = SOUTH + WEST
@@ -99,18 +104,29 @@ def play_one_move(col, row, valid_directions):
 
 
 # The main program starts here
-victory = False
-row = 1
-col = 1
-coin = 0
+def play():
+    victory = False
+    row = 1
+    col = 1
+    coin = 0
 
-valid_directions = NORTH
-print_directions(valid_directions)
+    valid_directions = NORTH
+    print_directions(valid_directions)
 
-while not victory:
-    victory, col, row = play_one_move(col, row, valid_directions)
-    if victory:
-        print("Victory!")
-    else:
-        valid_directions = find_directions(col, row,coin)
-        print_directions(valid_directions)
+    while not victory:
+        victory, col, row = play_one_move(col, row, valid_directions)
+        if victory:
+            print("Victory! Total coins {}.".format(coin))
+            play_again = input("Play again (y/n): ")
+            if play_again == "y".lower():
+                play()
+            else:
+                return
+        else:
+            valid_directions = find_directions(col, row)
+            coin += lever_rooms(col, row, coin)
+            print_directions(valid_directions)
+
+def main():
+    play()
+main()
